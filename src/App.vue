@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Home from './views/Horarios';
+import Home from './views/Horarios.vue';
 
 export default {
   name: 'App',

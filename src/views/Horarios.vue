@@ -17,7 +17,7 @@
       v-bind:class="{ selectedBaseBtn: selectedBase.includes('IRACEMA') }">
         IRACEMA
       </v-btn>
-      
+
       <weekTable :base="selectedBase"></weekTable>
     </v-row>
   </v-container>
