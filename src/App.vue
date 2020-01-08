@@ -21,3 +21,9 @@ export default {
   }),
 };
 </script>
+
+<style>
+  .v-input__slot {
+    background: #ffffff !important;
+  }
+</style>

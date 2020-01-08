@@ -1,5 +1,151 @@
 <template>
-  <v-container fluid>
+  <v-container fluid v-if="verticalView">
+    <v-row class="loadingRow" v-if="loading" align="center" justify="center">
+      <v-progress-circular
+        :size="70"
+        :width="5"
+        color="#e77f3f"
+        indeterminate
+      ></v-progress-circular>
+    </v-row>
+
+    <v-row align="center" justify="center"
+     v-if="(ifceTable || iracemaTable) && !loading">
+      <v-col cols="12">
+        <v-divider dark style="margin-bottom: 25px;"></v-divider>
+      </v-col>
+
+      <v-col cols="12">
+        <v-row  align="center" justify="center" class="weekBtnsRow">
+          <v-btn class="button" outlined color="white"
+          @click="selectedDay = 'Segunda'"
+          v-bind:class="{ selectedDayBtn: selectedDay.includes('Segunda') }">
+            Segunda-Feira
+          </v-btn>
+
+          <v-btn class="button" outlined color="white"
+          @click="selectedDay = 'Terça'"
+          v-bind:class="{ selectedDayBtn: selectedDay.includes('Terça') }">
+            Terça-Feira
+          </v-btn>
+
+          <v-btn class="button" outlined color="white"
+          @click="selectedDay = 'Quarta'"
+          v-bind:class="{ selectedDayBtn: selectedDay.includes('Quarta') }">
+            Quarta-Feira
+          </v-btn>
+
+          <v-btn class="button" outlined color="white"
+          @click="selectedDay = 'Quinta'"
+          v-bind:class="{ selectedDayBtn: selectedDay.includes('Quinta') }">
+            Quinta-Feira
+          </v-btn>
+
+          <v-btn class="button" outlined color="white"
+          @click="selectedDay = 'Sexta'"
+          v-bind:class="{ selectedDayBtn: selectedDay.includes('Sexta') }">
+            Sexta-Feira
+          </v-btn>
+        </v-row>
+      </v-col>
+    </v-row>
+
+    <!-- IFCE TABLE -->
+    <v-row align="center" justify="center">
+      <v-col cols="11" v-if="ifceTable && !loading">
+        <v-autocomplete clearable @click:clear="clearSelectedBolsista()"
+          label="Selecionar bolsista" filled
+          :items="ifceBolsistas" v-model="selectedBolsista"
+        ></v-autocomplete>
+      </v-col>
+
+      <v-col v-if="ifceTable && !loading && !selectedBolsistaData"
+      cols="11" class="hoursTable">
+        <div class="hoursDiv" v-for="(hour, index) in ifceHours" :key="index">
+          <div class="hourVerticalBox">
+            <div class="hourBox">
+              {{hour}}
+            </div>
+
+            <div class="" v-for="(bolsista, index) in ifceData" :key="index">
+              <div v-if="bolsista[`Horários [${hour}]`] !== undefined
+              && bolsista[`Horários [${hour}]`].includes(selectedDay)"
+              class="bolsistaVerticalBox">
+                {{splitName(bolsista.Nome)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </v-col>
+
+      <v-col v-if="ifceTable && selectedBolsistaData"
+      cols="11" class="hoursTable">
+        <div class="hoursDiv" v-for="(hour, index) in ifceHours" :key="index">
+          <div class="hourVerticalBox">
+            <div class="hourBox">
+              {{hour}}
+            </div>
+
+            <div v-if="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined
+            && selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)"
+            class="bolsistaVerticalBox">
+              {{splitName(selectedBolsistaData[0].Nome)}}
+            </div>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+
+    <!-- IRACEMA TABLE -->
+    <v-row align="center" justify="center">
+      <v-col cols="11" v-if="iracemaTable && !loading">
+        <v-autocomplete clearable @click:clear="clearSelectedBolsista()"
+          label="Selecionar bolsista" filled
+          :items="iracemaBolsistas" v-model="selectedBolsista"
+        ></v-autocomplete>
+      </v-col>
+
+      <v-col v-if="iracemaTable && !loading && !selectedBolsistaData"
+      cols="11" class="hoursTable">
+        <div class="hoursDiv" v-for="(hour, index) in iracemaHours" :key="index">
+          <div class="hourVerticalBox">
+            <div class="hourBox">
+              {{hour}}
+            </div>
+
+            <div class="" v-for="(bolsista, index) in iracemaData" :key="index">
+              <div v-if="bolsista[`Horários [${hour}]`] !== undefined
+              && bolsista[`Horários [${hour}]`].includes(selectedDay)"
+              class="bolsistaVerticalBox">
+                {{splitName(bolsista.Nome)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </v-col>
+
+      <v-col v-if="iracemaTable && selectedBolsistaData"
+      cols="11" class="hoursTable">
+        <div class="hoursDiv" v-for="(hour, index) in iracemaHours" :key="index">
+          <div class="hourVerticalBox">
+            <div class="hourBox">
+              {{hour}}
+            </div>
+
+            <div>
+              <div v-if="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined
+              && selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)"
+              class="bolsistaVerticalBox">
+                {{splitName(selectedBolsistaData[0].Nome)}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <v-container fluid v-else>
     <v-row class="loadingRow" v-if="loading" align="center" justify="center">
       <v-progress-circular
         :size="70"
@@ -162,9 +308,20 @@ export default {
       ifceData: {},
       iracemaData: {},
       selectedDay: '',
+      verticalView: true,
+      ifceBolsistas: [],
+      iracemaBolsistas: [],
+      selectedBolsista: '',
+      selectedBolsistaData: null,
+      filterSelectedBolsista: true,
     };
   },
   methods: {
+    clearSelectedBolsista() {
+      this.selectedBolsista = null;
+      this.selectedBolsistaData = null;
+      this.filterSelectedBolsista = false;
+    },
     getIfceData() {
       this.loading = true;
       api.get()
@@ -177,6 +334,8 @@ export default {
               }
               return null;
             });
+            this.ifceBolsistas = this.ifceData.map(bolsista => bolsista.Nome);
+
             if (this.iracemaTable) {
               this.iracemaTable = false;
             }
@@ -200,6 +359,9 @@ export default {
               }
               return null;
             });
+
+            this.iracemaBolsistas = this.iracemaData.map(bolsista => bolsista.Nome);
+
             if (this.ifceTable) {
               this.ifceTable = false;
             }
@@ -211,15 +373,44 @@ export default {
           this.loading = false;
         });
     },
+    splitName(name) {
+      const parts = name.split(' ');
+      const retVal = `${parts[0]} ${parts[1]}`;
+      return retVal;
+    },
   },
   watch: {
     base() {
       if (this.base.includes('IFCE')) {
         this.getIfceData();
-      }
-      if (this.base.includes('IRACEMA')) {
+      } else {
         this.getIracemaData();
       }
+    },
+    selectedBolsista() {
+      if (this.base.includes('IFCE') && this.filterSelectedBolsista) {
+        this.selectedBolsistaData = this.ifceData.filter((bolsista) => {
+          if (bolsista.Nome.includes(this.selectedBolsista)) {
+            return bolsista;
+          }
+          return null;
+        });
+        console.log(1);
+      }
+      if (this.base.includes('IRACEMA') && this.filterSelectedBolsista) {
+        this.selectedBolsistaData = this.iracemaData.filter((bolsista) => {
+          if (bolsista.Nome.includes(this.selectedBolsista)) {
+            return bolsista;
+          }
+          return null;
+        });
+        console.log(2);
+      }
+
+      if (!this.filterSelectedBolsista) {
+        this.filterSelectedBolsista = true;
+      }
+      console.log(this.selectedBolsistaData);
     },
   },
 };
@@ -249,14 +440,37 @@ export default {
     border-radius: 8px;
     padding: 20px 50px;
   }
+  .hoursDiv {
+    display: flex;
+    margin: 10px 10px;
+  }
+  .hoursDiv .hourBox {
+    width: 150px;
+    padding: 20px 25px;
+    color: #ffffff;
+    margin-right: 5px;
+  }
+  .hourVerticalBox {
+    margin-bottom: 5px;
+    display: flex;
+  }
   .bolsistaBox {
     text-align: center;
     padding: 20px;
-    /* border: 1px solid #ffffff; */
     border-radius: 8px;
     margin-top: 10px;
     background: #6fa259;
     color: #fff;
+  }
+  .bolsistaVerticalBox {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    /* margin-top: 10px; */
+    background: #6fa259;
+    color: #fff;
+    width: 200px;
+    margin: 0 5px;
   }
   .loadingRow {
     margin-top: 30px;
