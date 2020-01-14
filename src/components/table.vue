@@ -48,17 +48,18 @@
           </v-btn>
         </v-row>
       </v-col>
-    </v-row>
 
-    <!-- IFCE TABLE -->
-    <v-row align="center" justify="center">
       <v-col cols="11" v-if="ifceTable && !loading">
-        <v-autocomplete clearable @click:clear="clearSelectedBolsista()"
+        <v-autocomplete background-color="#ffffff" clearable
+        @click:clear="clearSelectedBolsista()"
           label="Selecionar bolsista" filled
           :items="ifceBolsistas" v-model="selectedBolsista"
         ></v-autocomplete>
       </v-col>
+    </v-row>
 
+    <!-- IFCE TABLE -->
+    <v-row align="center" justify="center">
       <v-col v-if="ifceTable && !loading && !selectedBolsistaData"
       cols="11" class="hoursTable">
         <div class="hoursDiv" v-for="(hour, index) in ifceHours" :key="index">
@@ -99,7 +100,8 @@
     <!-- IRACEMA TABLE -->
     <v-row align="center" justify="center">
       <v-col cols="11" v-if="iracemaTable && !loading">
-        <v-autocomplete clearable @click:clear="clearSelectedBolsista()"
+        <v-autocomplete background-color="#ffffff" clearable
+        @click:clear="clearSelectedBolsista()"
           label="Selecionar bolsista" filled
           :items="iracemaBolsistas" v-model="selectedBolsista"
         ></v-autocomplete>
@@ -250,6 +252,10 @@ export default {
       type: String,
       required: true,
     },
+    verticalViewMode: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {
@@ -308,7 +314,7 @@ export default {
       ifceData: {},
       iracemaData: {},
       selectedDay: '',
-      verticalView: true,
+      verticalView: this.verticalViewMode,
       ifceBolsistas: [],
       iracemaBolsistas: [],
       selectedBolsista: '',
@@ -328,7 +334,7 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.loading = false;
-            this.ifceData = res.data.filter((bolsista) => {
+            this.ifceData = res.data.result.filter((bolsista) => {
               if (bolsista['Base de Operação'].includes('IFCE')) {
                 return bolsista;
               }
@@ -353,7 +359,7 @@ export default {
         .then((res) => {
           if (res.status === 200) {
             this.loading = false;
-            this.iracemaData = res.data.filter((bolsista) => {
+            this.iracemaData = res.data.result.filter((bolsista) => {
               if (bolsista['Base de Operação'].includes('Iracema Coworking')) {
                 return bolsista;
               }
