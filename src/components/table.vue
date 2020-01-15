@@ -51,9 +51,10 @@
 
       <v-col cols="11" v-if="ifceTable && !loading">
         <v-autocomplete background-color="#ffffff" clearable
-        @click:clear="clearSelectedBolsista()"
+          @click:clear="clearSelectedBolsista()"
           label="Selecionar bolsista" filled
           :items="ifceBolsistas" v-model="selectedBolsista"
+          hide-details
         ></v-autocomplete>
       </v-col>
     </v-row>
@@ -81,7 +82,21 @@
 
       <v-col v-if="ifceTable && selectedBolsistaData"
       cols="11" class="hoursTable">
-        <div class="hoursDiv" v-for="(hour, index) in ifceHours" :key="index">
+        <div class="bolsistaDados">
+          <h3>
+            Dados do bolsista {{selectedBolsistaData[0].Nome}}
+          </h3>
+          <h4>
+            Email: {{selectedBolsistaData[0][`Endereço de e-mail`]}}
+          </h4>
+          <h4>
+            Total de horas semanais: {{calculateWeeklyHours()}}h
+          </h4>
+        </div>
+
+        <div class="hoursDiv" v-for="(hour, index) in ifceHours" :key="index"
+        v-show="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined &&
+        selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)">
           <div class="hourVerticalBox">
             <div class="hourBox">
               {{hour}}
@@ -101,9 +116,10 @@
     <v-row align="center" justify="center">
       <v-col cols="11" v-if="iracemaTable && !loading">
         <v-autocomplete background-color="#ffffff" clearable
-        @click:clear="clearSelectedBolsista()"
+          @click:clear="clearSelectedBolsista()"
           label="Selecionar bolsista" filled
           :items="iracemaBolsistas" v-model="selectedBolsista"
+          hide-details
         ></v-autocomplete>
       </v-col>
 
@@ -128,7 +144,9 @@
 
       <v-col v-if="iracemaTable && selectedBolsistaData"
       cols="11" class="hoursTable">
-        <div class="hoursDiv" v-for="(hour, index) in iracemaHours" :key="index">
+        <div class="hoursDiv" v-for="(hour, index) in iracemaHours" :key="index"
+        v-show="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined &&
+        selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)">
           <div class="hourVerticalBox">
             <div class="hourBox">
               {{hour}}
@@ -328,6 +346,36 @@ export default {
       this.selectedBolsistaData = null;
       this.filterSelectedBolsista = false;
     },
+    calculateWeeklyHours() {
+      let operationalBaseHours = null;
+      let days = 0;
+      let hours = 0;
+
+      if (this.base.includes('IFCE')) {
+        operationalBaseHours = this.ifceHours;
+      } else {
+        operationalBaseHours = this.iracemaHours;
+      }
+
+      operationalBaseHours.map((hour) => {
+        let commas = 0;
+        if (this.selectedBolsistaData[0][`Horários [${hour}]`]) {
+          commas = (this.selectedBolsistaData[0][`Horários [${hour}]`].match(/,/g) || []).length;
+          console.log(hour);
+        }
+
+        if (commas !== 0) {
+          days += commas + 1;
+        }
+
+        return days;
+      });
+
+      hours = days * 30;
+      const weeklyHours = hours / 60;
+      console.log(weeklyHours);
+      return weeklyHours;
+    },
     getIfceData() {
       this.loading = true;
       api.get()
@@ -392,6 +440,7 @@ export default {
       } else {
         this.getIracemaData();
       }
+      this.clearSelectedBolsista();
     },
     selectedBolsista() {
       if (this.base.includes('IFCE') && this.filterSelectedBolsista) {
@@ -401,7 +450,6 @@ export default {
           }
           return null;
         });
-        console.log(1);
       }
       if (this.base.includes('IRACEMA') && this.filterSelectedBolsista) {
         this.selectedBolsistaData = this.iracemaData.filter((bolsista) => {
@@ -410,7 +458,6 @@ export default {
           }
           return null;
         });
-        console.log(2);
       }
 
       if (!this.filterSelectedBolsista) {
@@ -495,5 +542,13 @@ export default {
   .selectedDayBtn {
     background-color: #476f36 !important;
     border-color: #476f36 !important;
+  }
+  .bolsistaDados {
+    height: 100px;
+  }
+  .bolsistaDados h3, .bolsistaDados h4 {
+    color: #ffffff;
+    text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);
+    margin: 10px;
   }
 </style>
