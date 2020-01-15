@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid v-if="verticalView">
+  <v-container fluid>
     <v-row class="loadingRow" v-if="loading" align="center" justify="center">
       <v-progress-circular
         :size="70"
@@ -176,101 +176,6 @@
       </v-col>
     </v-row>
   </v-container>
-
-  <v-container fluid v-else>
-    <v-row class="loadingRow" v-if="loading" align="center" justify="center">
-      <v-progress-circular
-        :size="70"
-        :width="5"
-        color="#e77f3f"
-        indeterminate
-      ></v-progress-circular>
-    </v-row>
-
-    <v-row align="center" justify="center"
-     v-if="(ifceTable || iracemaTable) && !loading">
-      <v-col cols="12">
-        <v-divider dark style="margin-bottom: 25px;"></v-divider>
-      </v-col>
-
-      <v-col cols="12">
-        <v-row  align="center" justify="center" class="weekBtnsRow">
-          <v-btn class="button" outlined color="white"
-          @click="selectedDay = 'Segunda'"
-          v-bind:class="{ selectedDayBtn: selectedDay.includes('Segunda') }">
-            Segunda-Feira
-          </v-btn>
-
-          <v-btn class="button" outlined color="white"
-          @click="selectedDay = 'Terça'"
-          v-bind:class="{ selectedDayBtn: selectedDay.includes('Terça') }">
-            Terça-Feira
-          </v-btn>
-
-          <v-btn class="button" outlined color="white"
-          @click="selectedDay = 'Quarta'"
-          v-bind:class="{ selectedDayBtn: selectedDay.includes('Quarta') }">
-            Quarta-Feira
-          </v-btn>
-
-          <v-btn class="button" outlined color="white"
-          @click="selectedDay = 'Quinta'"
-          v-bind:class="{ selectedDayBtn: selectedDay.includes('Quinta') }">
-            Quinta-Feira
-          </v-btn>
-
-          <v-btn class="button" outlined color="white"
-          @click="selectedDay = 'Sexta'"
-          v-bind:class="{ selectedDayBtn: selectedDay.includes('Sexta') }">
-            Sexta-Feira
-          </v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
-
-    <v-row align="center" justify="center">
-      <v-col v-if="ifceTable && !loading" cols="11" class="hoursTable">
-        <v-row  align="start" justify="center" id="ifceHoursRow">
-          <div class="hourColumn"
-            v-for="(hour, index) in ifceHours" :key="index">
-            <div class="hourBox">
-              {{hour}}
-            </div>
-
-            <div v-for="(bolsista, index) in ifceData" :key="index">
-              <div v-if="bolsista[`Horários [${hour}]`] !== undefined
-              && bolsista[`Horários [${hour}]`].includes(selectedDay)"
-              class="bolsistaBox">
-                {{bolsista.Nome}}
-              </div>
-            </div>
-          </div>
-        </v-row>
-      </v-col>
-    </v-row>
-
-    <v-row align="center" justify="center">
-      <v-col v-if="iracemaTable && !loading" cols="11" class="hoursTable">
-        <v-row v-if="iracemaTable && !loading" align="start" justify="center" id="iracemaHoursRow">
-          <div class="hourColumn"
-            v-for="(hour, index) in iracemaHours" :key="index">
-            <div class="hourBox">
-              {{hour}}
-            </div>
-
-            <div v-for="(bolsista, index) in iracemaData" :key="index">
-              <div v-if="bolsista[`Horários [${hour}]`] !== undefined
-              && bolsista[`Horários [${hour}]`].includes(selectedDay)"
-              class="bolsistaBox">
-                {{bolsista.Nome}}
-              </div>
-            </div>
-          </div>
-        </v-row>
-      </v-col>
-    </v-row>
-
-  </v-container>
 </template>
 
 <script>
@@ -281,11 +186,7 @@ export default {
     base: {
       type: String,
       required: true,
-    },
-    verticalViewMode: {
-      type: Boolean,
-      required: true,
-    },
+    }
   },
   data() {
     return {

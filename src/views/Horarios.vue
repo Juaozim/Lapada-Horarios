@@ -1,33 +1,12 @@
 <template>
   <v-container fluid class="homeContainer">
     <v-row justify="center" align="center">
-      <v-col cols="2">
-      </v-col>
-      <v-col cols="8">
-        <h1 class="homeTitle">
+      <v-col cols="12">
+        <h1 class="homeTitle text-center">
           Horários dos bolsistas - LAPADA
         </h1>
       </v-col>
-      <v-col cols="2">
-        <div>
-          <div class="text-center" style="color: #fff">
-            Visualização Vertical
-          </div>
 
-          <div v-if="verticalView" class="eyeIcon"
-           @click="verticalView = false">
-            <v-icon>
-              mdi-eye-outline
-            </v-icon>
-          </div>
-
-          <div class="eyeIcon" v-else @click="verticalView = true">
-            <v-icon>
-              mdi-eye-off-outline
-            </v-icon>
-          </div>
-        </div>
-      </v-col>
       <v-btn class="button" outlined color="white"
       @click="selectedBase = 'IFCE'"
       v-bind:class="{ selectedBaseBtn: selectedBase.includes('IFCE') }">
@@ -40,7 +19,7 @@
         IRACEMA
       </v-btn>
 
-      <weekTable :base="selectedBase" :verticalViewMode="verticalView"></weekTable>
+      <weekTable :base="selectedBase"></weekTable>
     </v-row>
   </v-container>
 </template>
@@ -56,7 +35,6 @@ export default {
   data() {
     return {
       selectedBase: '',
-      verticalView: true,
     };
   },
 };
@@ -83,12 +61,5 @@ export default {
   .selectedBaseBtn {
     background-color: #e77f3f !important;
     border-color: #e77f3f !important;
-  }
-  .eyeIcon {
-    display: flex;
-    justify-content: center;
-  }
-  .eyeIcon i {
-    color: #fff;
   }
 </style>
