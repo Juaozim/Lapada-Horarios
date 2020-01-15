@@ -144,6 +144,18 @@
 
       <v-col v-if="iracemaTable && selectedBolsistaData"
       cols="11" class="hoursTable">
+        <div class="bolsistaDados">
+          <h3>
+            Dados do bolsista {{selectedBolsistaData[0].Nome}}
+          </h3>
+          <h4>
+            Email: {{selectedBolsistaData[0][`Endereço de e-mail`]}}
+          </h4>
+          <h4>
+            Total de horas semanais: {{calculateWeeklyHours()}}h
+          </h4>
+        </div>
+
         <div class="hoursDiv" v-for="(hour, index) in iracemaHours" :key="index"
         v-show="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined &&
         selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)">
@@ -361,7 +373,6 @@ export default {
         let commas = 0;
         if (this.selectedBolsistaData[0][`Horários [${hour}]`]) {
           commas = (this.selectedBolsistaData[0][`Horários [${hour}]`].match(/,/g) || []).length;
-          console.log(hour);
         }
 
         if (commas !== 0) {
@@ -373,7 +384,6 @@ export default {
 
       hours = days * 30;
       const weeklyHours = hours / 60;
-      console.log(weeklyHours);
       return weeklyHours;
     },
     getIfceData() {
@@ -463,7 +473,6 @@ export default {
       if (!this.filterSelectedBolsista) {
         this.filterSelectedBolsista = true;
       }
-      console.log(this.selectedBolsistaData);
     },
   },
 };
