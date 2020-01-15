@@ -186,7 +186,7 @@ export default {
     base: {
       type: String,
       required: true,
-    }
+    },
   },
   data() {
     return {
