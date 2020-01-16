@@ -90,6 +90,12 @@
             Email: {{selectedBolsistaData[0][`Endereço de e-mail`]}}
           </h4>
           <h4>
+            Projeto(s): {{selectedBolsistaData[0][`Projetos`]}}
+          </h4>
+          <h4>
+            Uso de PC: {{selectedBolsistaData[0][`Uso de PC`]}}
+          </h4>
+          <h4>
             Total de horas semanais: {{calculateWeeklyHours()}}h
           </h4>
         </div>
@@ -148,9 +154,23 @@
           <h3>
             Dados do bolsista {{selectedBolsistaData[0].Nome}}
           </h3>
+
           <h4>
             Email: {{selectedBolsistaData[0][`Endereço de e-mail`]}}
           </h4>
+
+          <h4>
+            Projeto(s): {{selectedBolsistaData[0][`Projetos`]}}
+          </h4>
+
+          <h4>
+            Uso de PC: {{selectedBolsistaData[0][`Uso de PC`]}}
+          </h4>
+
+          <h4>
+            {{selectedBolsistaData[0][`Espaço Iracema`]}} - {{selectedBolsistaData[0][`Estação`]}}
+          </h4>
+
           <h4>
             Total de horas semanais: {{calculateWeeklyHours()}}h
           </h4>
@@ -454,7 +474,7 @@ export default {
     border-color: #476f36 !important;
   }
   .bolsistaDados {
-    height: 100px;
+    margin-bottom: 40px;
   }
   .bolsistaDados h3, .bolsistaDados h4 {
     color: #ffffff;
