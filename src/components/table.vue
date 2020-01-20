@@ -73,7 +73,12 @@
               <div v-if="bolsista[`Horários [${hour}]`] !== undefined
               && bolsista[`Horários [${hour}]`].includes(selectedDay)"
               class="bolsistaVerticalBox">
-                {{splitName(bolsista.Nome)}}
+                <span class="bolsistaName">{{splitName(bolsista.Nome)}}</span>
+                <div class="bolsistaCardData">
+                  {{bolsista[`Espaço Iracema`]}} <span v-if="bolsista[`Espaço Iracema`]">-</span>
+                  {{bolsista[`Estação`]}} <span v-if="bolsista[`Espaço Iracema`]"><br></span>
+                  {{bolsista[`Uso de PC`]}}
+                </div>
               </div>
             </div>
           </div>
@@ -141,7 +146,12 @@
               <div v-if="bolsista[`Horários [${hour}]`] !== undefined
               && bolsista[`Horários [${hour}]`].includes(selectedDay)"
               class="bolsistaVerticalBox">
-                {{splitName(bolsista.Nome)}}
+                <span class="bolsistaName">{{splitName(bolsista.Nome)}}</span>
+                <div class="bolsistaCardData">
+                  {{bolsista[`Espaço Iracema`]}} <span v-if="bolsista[`Espaço Iracema`]">-</span>
+                  {{bolsista[`Estação`]}} <span v-if="bolsista[`Espaço Iracema`]"><br></span>
+                  {{bolsista[`Uso de PC`]}}
+                </div>
               </div>
             </div>
           </div>
@@ -414,7 +424,6 @@ export default {
     flex-direction: column;
     justify-content: start;
     color: #ffffff;
-    /* border: 1px solid #ffffff; */
     margin: 0 5px;
     max-width: 192px;
   }
@@ -428,6 +437,8 @@ export default {
     margin: 10px 10px;
   }
   .hoursDiv .hourBox {
+    display: flex;
+    align-items: center;
     width: 150px;
     padding: 20px 25px;
     color: #ffffff;
@@ -447,9 +458,9 @@ export default {
   }
   .bolsistaVerticalBox {
     text-align: center;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
-    /* margin-top: 10px; */
+    min-height: 85px;
     background: #6fa259;
     color: #fff;
     width: 200px;
@@ -480,5 +491,13 @@ export default {
     color: #ffffff;
     text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);
     margin: 10px;
+  }
+  .bolsistaName {
+    text-shadow: -1px -1px 1px rgba(255,255,255,.1), 1px 1px 1px rgba(0,0,0,.5);
+    font-size: 13pt;
+    font-weight: bold;
+  }
+  .bolsistaCardData {
+    font-size: 10pt;
   }
 </style>
