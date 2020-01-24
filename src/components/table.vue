@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid >
     <v-row class="loadingRow" v-if="loading" align="center" justify="center">
       <v-progress-circular
         :size="70"
@@ -62,7 +62,7 @@
     <!-- IFCE TABLE -->
     <v-row align="center" justify="center">
       <v-col v-if="ifceTable && !loading && !selectedBolsistaData"
-      cols="11" class="hoursTable">
+      cols="12" class="hoursTable" v-dragscroll.x>
         <div class="hoursDiv" v-for="(hour, index) in ifceHours" :key="index">
           <div class="hourVerticalBox">
             <div class="hourBox">
@@ -75,8 +75,6 @@
               class="bolsistaVerticalBox">
                 <span class="bolsistaName">{{splitName(bolsista.Nome)}}</span>
                 <div class="bolsistaCardData">
-                  {{bolsista[`Espaço Iracema`]}} <span v-if="bolsista[`Espaço Iracema`]">-</span>
-                  {{bolsista[`Estação`]}} <span v-if="bolsista[`Espaço Iracema`]"><br></span>
                   {{bolsista[`Uso de PC`]}}
                 </div>
               </div>
@@ -86,7 +84,7 @@
       </v-col>
 
       <v-col v-if="ifceTable && selectedBolsistaData"
-      cols="11" class="hoursTable">
+      cols="12" class="hoursTable">
         <div class="bolsistaDados">
           <h3>
             Dados do bolsista {{selectedBolsistaData[0].Nome}}
@@ -116,7 +114,12 @@
             <div v-if="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined
             && selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)"
             class="bolsistaVerticalBox">
-              {{splitName(selectedBolsistaData[0].Nome)}}
+              <span class="bolsistaName">
+                {{splitName(selectedBolsistaData[0].Nome)}}
+              </span>
+              <div class="bolsistaCardData">
+                {{selectedBolsistaData[0][`Uso de PC`]}}
+              </div>
             </div>
           </div>
         </div>
@@ -135,7 +138,7 @@
       </v-col>
 
       <v-col v-if="iracemaTable && !loading && !selectedBolsistaData"
-      cols="11" class="hoursTable">
+      cols="12" class="hoursTable" v-dragscroll.x>
         <div class="hoursDiv" v-for="(hour, index) in iracemaHours" :key="index">
           <div class="hourVerticalBox">
             <div class="hourBox">
@@ -159,7 +162,7 @@
       </v-col>
 
       <v-col v-if="iracemaTable && selectedBolsistaData"
-      cols="11" class="hoursTable">
+      cols="12" class="hoursTable">
         <div class="bolsistaDados">
           <h3>
             Dados do bolsista {{selectedBolsistaData[0].Nome}}
@@ -198,7 +201,16 @@
               <div v-if="selectedBolsistaData[0][`Horários [${hour}]`] !== undefined
               && selectedBolsistaData[0][`Horários [${hour}]`].includes(selectedDay)"
               class="bolsistaVerticalBox">
-                {{splitName(selectedBolsistaData[0].Nome)}}
+                <span class="bolsistaName">
+                  {{splitName(selectedBolsistaData[0].Nome)}}
+                </span>
+                <div class="selectedBolsistaData[0]CardData">
+                  {{selectedBolsistaData[0][`Espaço Iracema`]}}
+                  <span v-if="selectedBolsistaData[0][`Espaço Iracema`]">-</span>
+                  {{selectedBolsistaData[0][`Estação`]}}
+                  <span v-if="selectedBolsistaData[0][`Espaço Iracema`]"><br></span>
+                  {{selectedBolsistaData[0][`Uso de PC`]}}
+                </div>
               </div>
             </div>
           </div>
@@ -209,9 +221,13 @@
 </template>
 
 <script>
+import { dragscroll } from 'vue-dragscroll';
 import api from '../plugins/axios';
 
 export default {
+  directives: {
+    dragscroll,
+  },
   props: {
     base: {
       type: String,
@@ -369,9 +385,13 @@ export default {
         });
     },
     splitName(name) {
-      const parts = name.split(' ');
-      const retVal = `${parts[0]} ${parts[1]}`;
-      return retVal;
+      if (name.length > 20) {
+        const parts = name.split(' ');
+        const retVal = `${parts[0]} ${parts[1]}`;
+        return retVal;
+      }
+
+      return name;
     },
   },
   watch: {
@@ -422,7 +442,7 @@ export default {
   .hourColumn {
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: flex-start;
     color: #ffffff;
     margin: 0 5px;
     max-width: 192px;

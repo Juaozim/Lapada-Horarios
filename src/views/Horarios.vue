@@ -3,7 +3,7 @@
     <v-row justify="center" align="center">
       <v-col cols="12">
         <h1 class="homeTitle text-center">
-          Horários dos bolsistas - LAPADA
+          Horários - LAPADA
         </h1>
       </v-col>
 
